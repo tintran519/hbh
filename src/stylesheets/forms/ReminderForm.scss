@@ -9,6 +9,19 @@
     .form-group {
       padding-top: 5%;
     }
+
+    .btn-container {
+      padding: 30px 0px;
+      button {
+        padding: 8px 30px 10px 30px;
+        background-color: #2689dd;
+        border-radius: 0.30rem;
+      }
+    }
+
+    .message-preview {
+      padding-top: 20px;
+    }
   }
 
   .img-container {

@@ -59,7 +59,7 @@ class ReminderForm extends React.Component {
                 </div>
               </form>
 
-              <div className="col-xs-12 message">
+              <div className="col-xs-12 message-preview">
                 <p>
                   Hi {this.props.firstName}!<br />
                   Thanks for signing up for a reminder for {this.props.medicine}.
@@ -67,7 +67,7 @@ class ReminderForm extends React.Component {
                 </p>
               </div>
 
-              <div className="col-xs-12 text-center">
+              <div className="col-xs-12 btn-container text-center">
                 <button type="button" className="btn btn-primary">
                   Set Reminder
                 </button>
