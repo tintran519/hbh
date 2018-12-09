@@ -10,7 +10,7 @@ class ReminderFormContainer extends React.Component {
     this.state = {
       name: "John Doe",
       email: "john@email.com",
-      medicine: "nonsteroidal anti-inflammatory drug",
+      medicine: "advil",
       daysSupply: 0,
       daysSupplyArr: [30, 60, 90, 100, 120],
       reactions: [],
@@ -31,22 +31,34 @@ class ReminderFormContainer extends React.Component {
 
   getReactions () {
     const medicine = this.state.medicine.split(" ").join("+");
-    const url      = `https://api.fda.gov/drug/event.json?search=patient.drug.openfda.pharm_class_epc:"${medicine}"&limit=1`
+    const url      = `https://api.fda.gov/drug/event.json?search=patient.drug.medicinalproduct:"${medicine}"&limit=1`;
 
     axios({
       url: url,
     }).then(this.getReactionsSuccess.bind(this))
+    .catch(this.getReactionsError.bind(this))
   }
 
   getReactionsSuccess (response) {
     const reactions = response.data.results[0].patient.reaction;
 
-    this.setState({ reactions: reactions })
-    console.log('reactions: ', reactions)
+    if (reactions) { this.setState({ reactions: reactions }) };
+  }
+
+  getReactionsError (error) {
+    this.setState({ reactions: [] });
   }
 
   onChangeHandler (e, field) {
     this.setState({ [field]: e.target.value })
+
+    if (field === "medicine") {
+      const duration = 2000;
+      clearTimeout(this.inputTimer);
+      this.inputTimer = setTimeout(() => {
+        this.getReactions();
+      }, duration)
+    }
   }
 
   getFirstName () {
@@ -56,7 +68,7 @@ class ReminderFormContainer extends React.Component {
   getSendDate () {
     const today    = new Date();
 
-    today.setDate(today.getDate() + parseInt(this.state.daysSupply) - 5)
+    today.setDate(today.getDate() + parseInt(this.state.daysSupply) - 5);
     return today.toDateString();
   }
 
@@ -69,25 +81,24 @@ class ReminderFormContainer extends React.Component {
       return list[(listLen/2) - 1];
     } else {
       return list[Math.floor(listLen/2)];
-    };
+    }
   }
 
-  options (label) {
-    let arr = this.state.daysSupplyArr;
+  options (label, arr) {
     return arr.map((el, index) => {
       if (index === 0) {
         return [ <option disabled key={'option-label'}>{label}</option>, <option key={index} value={el}>{el}</option> ]
       } else {
-        return <option key={index} value={el}>{el}</option>
+        return <option key={el + index} value={el}>{el}</option>
       }
     });
   }
 
   reactionList () {
-    if (this.state.reactions.length < 1) { return <p>*Unknown reactions</p> };
+    if (this.state.reactions.length < 1) { return <p>*Unknown reactions for drug</p> };
 
-    return this.state.reactions.map((el) => {
-      return <p>*{el.reactionmeddrapt}</p>
+    return this.state.reactions.map((el, index) => {
+      return <p key={el + index}>*{el.reactionmeddrapt}</p>
     });
   }
 
@@ -99,7 +110,7 @@ class ReminderFormContainer extends React.Component {
         name               ={this.state.name}
         email              ={this.state.email}
         medicine           ={this.state.medicine}
-        dayOptions         ={this.options("Days supply of RX")}
+        dayOptions         ={this.options("Days supply of RX", this.state.daysSupplyArr)}
         middleDayOption    ={this.getMedianValue(this.state.daysSupplyArr)}
         sendDate           ={this.getSendDate()}
         reactionList       ={this.reactionList()}
