@@ -75,6 +75,7 @@ class ReminderForm extends React.Component {
 
               <div className="drug-reactions">
                 <p>As a service, here are the possible drug reactions you should contact your doctor if you're experiencing:</p>
+                {this.props.reactionList}
               </div>
             </div>
 

@@ -1,4 +1,6 @@
-import React        from 'react';
+import React from 'react';
+import axios from 'axios';
+
 import ReminderForm from '../../components/forms/ReminderForm';
 
 class ReminderFormContainer extends React.Component {
@@ -11,16 +13,36 @@ class ReminderFormContainer extends React.Component {
       medicine: "nonsteroidal anti-inflammatory drug",
       daysSupply: 0,
       daysSupplyArr: [30, 60, 90, 100, 120],
+      reactions: [],
     }
 
     this.onChangeHandler = this.onChangeHandler.bind(this);
     this.getFirstName    = this.getFirstName.bind(this);
     this.getSendDate     = this.getSendDate.bind(this);
+    this.getReactions    = this.getReactions.bind(this);
     this.options         = this.options.bind(this);
+    this.reactionList    = this.reactionList.bind(this);
   }
 
   componentDidMount () {
-    this.setState({ daysSupply: this.getMedianValue(this.state.daysSupplyArr) })
+    this.setState({ daysSupply: this.getMedianValue(this.state.daysSupplyArr) });
+    this.getReactions();
+  }
+
+  getReactions () {
+    const medicine = this.state.medicine.split(" ").join("+");
+    const url      = `https://api.fda.gov/drug/event.json?search=patient.drug.openfda.pharm_class_epc:"${medicine}"&limit=1`
+
+    axios({
+      url: url,
+    }).then(this.getReactionsSuccess.bind(this))
+  }
+
+  getReactionsSuccess (response) {
+    const reactions = response.data.results[0].patient.reaction;
+
+    this.setState({ reactions: reactions })
+    console.log('reactions: ', reactions)
   }
 
   onChangeHandler (e, field) {
@@ -47,7 +69,7 @@ class ReminderFormContainer extends React.Component {
       return list[(listLen/2) - 1];
     } else {
       return list[Math.floor(listLen/2)];
-    }
+    };
   }
 
   options (label) {
@@ -58,7 +80,15 @@ class ReminderFormContainer extends React.Component {
       } else {
         return <option key={index} value={el}>{el}</option>
       }
-    })
+    });
+  }
+
+  reactionList () {
+    if (this.state.reactions.length < 1) { return <p>*Unknown reactions</p> };
+
+    return this.state.reactions.map((el) => {
+      return <p>*{el.reactionmeddrapt}</p>
+    });
   }
 
   render () {
@@ -72,6 +102,7 @@ class ReminderFormContainer extends React.Component {
         dayOptions         ={this.options("Days supply of RX")}
         middleDayOption    ={this.getMedianValue(this.state.daysSupplyArr)}
         sendDate           ={this.getSendDate()}
+        reactionList       ={this.reactionList()}
         />
     )
   }
