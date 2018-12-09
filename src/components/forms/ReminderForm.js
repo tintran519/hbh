@@ -18,41 +18,38 @@ class ReminderForm extends React.Component {
               <form>
                 <div className="row">
                   <div className="form-group col-lg-6">
-                    <label for="name"></label>
                     <input
                       type="name"
                       className="form-control"
                       placeholder="Full name"
+                      onChange={(e) => this.props.onChangeHandler(e, "name")}
                       />
                   </div>
 
                   <div className="form-group col-lg-6">
-                    <label for="email"></label>
                     <input
                       type="email"
                       className="form-control"
                       placeholder="Email"
+                      onChange={(e) => this.props.onChangeHandler(e, "email")}
                       />
                   </div>
 
                   <div className="form-group col-lg-6">
-                    <label for="medicine-name"></label>
                     <input
                       type="medicine-name"
                       className="form-control"
                       placeholder="Medicine Name"
+                      onChange={(e) => this.props.onChangeHandler(e, "medicine")}
                       />
                   </div>
 
                   <div className="form-group col-lg-6">
-                    <label for="email"></label>
                     <select
                       className="form-control"
-                      placeholder="Days supply of RX">
-                      <option selected disabled>Days supply of RX</option>
-                      <option>30</option>
-                      <option>60</option>
-                      <option selected="selected">90</option>
+                      placeholder="Days supply of RX"
+                      defaultValue={90}>
+                      {this.props.dayOptions}
                     </select>
                   </div>
                 </div>
@@ -60,8 +57,9 @@ class ReminderForm extends React.Component {
 
               <div className="col-xs-12 message">
                 <p>
-                  Hi blah!<br />
-                  Thanks for signing up for a reminder for blah. We'll send it to blah on blah, to give you a little notice.
+                  Hi {this.props.name}!<br />
+                  Thanks for signing up for a reminder for {this.props.medicine}.
+                  We'll send it to {this.props.email} on blah, to give you a little notice.
                 </p>
               </div>
 
