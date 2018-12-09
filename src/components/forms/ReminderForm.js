@@ -22,6 +22,7 @@ class ReminderForm extends React.Component {
                       type="name"
                       className="form-control"
                       placeholder="Full name"
+                      value={this.props.name}
                       onChange={(e) => this.props.onChangeHandler(e, "name")}
                       />
                   </div>
@@ -31,6 +32,7 @@ class ReminderForm extends React.Component {
                       type="email"
                       className="form-control"
                       placeholder="Email"
+                      value={this.props.email}
                       onChange={(e) => this.props.onChangeHandler(e, "email")}
                       />
                   </div>
@@ -40,6 +42,7 @@ class ReminderForm extends React.Component {
                       type="medicine-name"
                       className="form-control"
                       placeholder="Medicine Name"
+                      value={this.props.medicine}
                       onChange={(e) => this.props.onChangeHandler(e, "medicine")}
                       />
                   </div>
@@ -48,7 +51,8 @@ class ReminderForm extends React.Component {
                     <select
                       className="form-control"
                       placeholder="Days supply of RX"
-                      defaultValue={90}>
+                      defaultValue={this.props.middleDayOption}
+                      onChange={(e) => this.props.onChangeHandler(e, "daysSupply")}>
                       {this.props.dayOptions}
                     </select>
                   </div>
@@ -57,9 +61,9 @@ class ReminderForm extends React.Component {
 
               <div className="col-xs-12 message">
                 <p>
-                  Hi {this.props.name}!<br />
+                  Hi {this.props.firstName}!<br />
                   Thanks for signing up for a reminder for {this.props.medicine}.
-                  We'll send it to {this.props.email} on blah, to give you a little notice.
+                  We'll send it to {this.props.email} on {this.props.sendDate}, to give you a little notice.
                 </p>
               </div>
 
@@ -74,8 +78,8 @@ class ReminderForm extends React.Component {
               </div>
             </div>
 
-            <div className="col-lg-4 img-container text-right">
-              <img src={clockImg} />
+            <div className="col-lg-4 img-container">
+              <img src={clockImg} alt="clock-icon" />
             </div>
 
           </div>

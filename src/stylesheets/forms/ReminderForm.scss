@@ -10,4 +10,11 @@
       padding-top: 5%;
     }
   }
+
+  .img-container {
+    text-align: right;
+    @media (max-width: 991px) {
+      text-align: center;
+    }
+  }
 }
