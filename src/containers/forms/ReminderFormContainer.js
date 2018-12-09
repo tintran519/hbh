@@ -97,7 +97,7 @@ class ReminderFormContainer extends React.Component {
   reactionList () {
     if (this.state.reactions.length < 1) { return <p>*Unknown reactions for drug</p> };
 
-    return this.state.reactions.map((el, index) => {
+    return this.state.reactions.slice(0,5).map((el, index) => {
       return <p key={el + index}>*{el.reactionmeddrapt}</p>
     });
   }
